@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+
+	<ui:composition template="/template/common/commonLayout.xhtml">
+	 	<ui:define name="breadcrumb">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+    		  <p:outputPanel autoUpdate="true">  
+    		  <p:breadCrumb  >
+    		
+       <p:menuitem  url="home.faces" >
+        <a href="home.faces" ><i class="icon-home" style="font-size:30px; text-decoration:none;"/></a>
+        </p:menuitem>  
+  
+        
+    <p:menuitem value="#{msg.my_account}" url="myaccount.faces" />  
+      
+</p:breadCrumb>  
+  </p:outputPanel>
+    	</f:view>
+    	
+    	</ui:define>
+		<ui:define name="content">
+			<f:loadBundle basename="resource.MessageResources" var="msg" />
+			<f:view locale="#{languageBean.localeCode}">
+<p:hotkey bind="ctrl+s" handler="confirmation.show();"  />  
+				<p:ajaxStatus onstart="statusDialog.show();"
+					onsuccess="statusDialog.hide();" />
+
+				<p:dialog width="300" id="status" position="center" height="30"
+					modal="true" widgetVar="statusDialog" header="Procesando petición"
+					draggable="false" closable="false" resizable="false">
+					<p:graphicImage width="250"
+						value="/resources/images/ajaxloadingbar.gif" />
+				</p:dialog>
+
+				<div id="registro">
+	<p:messages id="msgs" escape="false" />
+				
+
+ <p:confirmDialog id="confirmDialog" message="#{msg.are_you_sure_about_save_the_data}" header="#{msg.confirm}" severity="alert" widgetVar="confirmation">  
+                  
+ 	<p:commandButton id="btn" value="#{msg.ok}" update=":accordion-panel:form-signup"  onclick="confirmation.hide()" actionListener="#{usuarioBean.saveUsuario}"></p:commandButton>
+     <p:commandButton id="decline" value="#{msg.cancel}" onclick="confirmation.hide()" type="button" />                 
+    </p:confirmDialog>  
+	
+	<p:outputPanel autoUpdate="true">
+
+						<p:accordionPanel id="accordion-panel"   >
+						<p:tab  title="#{msg.personal_data}" >
+							<h:form id="form-signup">
+							
+							<!--     <p:panel id="panelPersonal" header="#{msg.personal_data}"> -->
+							
+							<p:growl id="growl" autoUpdate="true" showDetail="true" />
+							<h:panelGrid columns="2" styleClass="inputs-panel-grid" >
+						
+								<h:outputLabel styleClass="capitalize" for="login"
+									value="#{msg.login}:" />
+								<p:inputText styleClass="inputs" id="login" value="#{usuarioBean.login}"
+									required="true" label="#{msg.login}:"
+									validatorMessage="#{msg.login}:#{usuarioBean.login}#{msg.error_login_field}">
+									<f:validateLength minimum="3" maximum="128" />
+									<f:validateRegex pattern="[a-z][a-z0-9_-]{3,15}" />
+								</p:inputText>
+
+								<h:outputLabel styleClass="capitalize" for="name"
+									value="#{msg.name}:" />
+								<p:inputText styleClass="inputs" id="name" value="#{usuarioBean.nombre}"
+									required="true" label="#{msg.name}:"
+									validatorMessage="#{msg.name}:#{usuarioBean.nombre}#{msg.error_name_field}">
+									<f:validateLength minimum="2" maximum="128" />
+									<f:validateRegex
+										pattern="([A-ZÁÉÍÓÚÑ][a-záéíóúñ]{1,})([\s][A-ZÁÉÍÓÚÑ][a-záéíóúñ]{1,})*" />
+								</p:inputText>
+								<h:outputLabel for="apellido" value="#{msg.lastname}:" />
+								<p:inputText styleClass="inputs" id="apellido" value="#{usuarioBean.apellidos}"
+									required="true" label="apellido"
+									validatorMessage="#{msg.lastname}:#{usuarioBean.apellidos} #{msg.error_surname_field}">
+									<f:validateLength minimum="2" maximum="182" />
+									<f:validateRegex
+										pattern="([A-ZÁÉÍÓÚÑ][a-záéíóúñ]{1,})([\s][A-ZÁÉÍÓÚÑ][a-záéíóúñ]{1,})*" />
+								</p:inputText>
+								<h:outputLabel for="mail" value="#{msg.email}:" />
+								<p:inputText styleClass="inputs" id="mail" value="#{usuarioBean.mail}"
+									required="true" label="mail">
+									<f:validator validatorId="emailExistValidator" />
+								</p:inputText>
+									<h:outputLabel for="calendar" value="#{msg.birthday}:" />
+								<p:calendar  styleClass="inputs" id="calendar" value="#{usuarioBean.fechaNacimiento}"
+									navigator="true" display="inline" />
+
+
+  <p:commandButton style="float:right;margin-top: 20px;" id="ShowConfirmDialog" value="#{msg.save}" title="ctrl+s" onclick="confirmation.show()" type="button"/>  
+
+<p:commandButton  style="margin-top: 20px;" id="reset" value="#{msg.reset}"  title="ctrl+r" update="form-signup" actionListener="#{usuarioBean.reset}" widgetVar="widgetReset"></p:commandButton>
+
+
+							</h:panelGrid>
+							<!-- <p:captcha id="captcha" required="true"   label="Captcha" language="es" theme="clean" /> -->
+							<!--   </p:panel> -->
+
+
+
+		<p:defaultCommand target="ShowConfirmDialog" />  				
+
+						</h:form>
+						
+						</p:tab>
+							<p:tab   title="#{msg.change_image}">
+								<h:form id="form-cropper">
+<p:hotkey bind="ctrl+c" handler="cropwidget.jq.click();"  />  
+
+								
+<p:commandButton widgetVar="cropwidget" value="#{msg.crop}"
+										rendered="#{usuarioBean.rendered}"
+										action="#{usuarioBean.crop()}"
+										update=":accordion-panel:form-cropper:localCroppedImage"
+										title="ctrl+c"
+										 />
+  <p:commandButton   value="#{msg.save}" title="ctrl+s" onclick="confirmation.show()" type="button"/>  
+
+									<h:panelGrid styleClass="image-cropper-inner" columns="2">
+										<p:imageCropper widgetVar="widget-image-cropper"
+											immediate="true" id="imagecropper"
+											value="#{usuarioBean.croppedImage}"
+											image="/resources/tmp/profileimages/#{usuarioBean.uploadedImage}"
+											aspectRatio="#{usuarioBean.ratio}"
+											initialCoords="0,0,1000,1000" />
+										<p:graphicImage id="localCroppedImage"
+											width="#{usuarioBean.widthPreview}"
+											height="#{usuarioBean.heightPreview}"
+											value="/resources/tmp/profileimages/#{usuarioBean.newImageName}.#{usuarioBean.extension}" />
+									</h:panelGrid>
+									
+								</h:form>
+								
+									<h:form enctype="multipart/form-data">
+										<p:fileUpload mode="advanced"
+											widgetVar="widgetfileupload"
+											label="#{msg.upload}"
+											fileUploadListener="#{usuarioBean.handleFileUpload}"
+											allowTypes="/(\.|\/)(gif|jpg|jpeg|gif|png|PNG|GIF|JPG|JPEG)$/"
+											auto="true" showButtons="false"
+											update=":accordion-panel:form-cropper:imagecropper,:accordion-panel:form-cropper,:accordion-panel:form-cropper:localCroppedImage"
+											dragDropSupport="true" />
+									</h:form>
+								
+
+							</p:tab>
+								<p:tab title="#{msg.change_password}">
+								
+				<h:form>				
+					<h:panelGrid columns="2" styleClass="inputs-panel-grid">			
+	<h:outputLabel for="password1" value="#{msg.password}:" />
+								<p:password styleClass="inputs" id="password1" match="password2"
+									value="#{usuarioBean.password}" required="true" label="#{msg.password}"
+									feedback="true" promptLabel="#{msg.type_the_password}"
+									weakLabel="#{msg.weak}" goodLabel="#{msg.good}"
+									strongLabel="#{msg.best}">
+									<f:validateLength minimum="6" />
+								</p:password>
+
+								<h:outputLabel for="password2" value="#{msg.repeat_password}:" />
+
+
+								<p:password styleClass="inputs" id="password2" value="#{usuarioBean.password}"
+									required="true" label="#{msg.repeat_password}">
+									<f:validateLength minimum="3" />
+
+								</p:password>
+								
+								
+				
+				</h:panelGrid>	
+				<h:panelGrid columns="1" styleClass="inputs-panel-grid">
+				<p:commandButton  styleClass="inputs" id="changepasswordbtn" value="#{msg.change_password}"  actionListener="#{usuarioBean.changePassword}"></p:commandButton>
+				</h:panelGrid>				
+	</h:form>					
+								</p:tab>
+								
+									<p:tab title="#{msg.language}">
+									<p:outputPanel autoUpdate="true">
+										<h:form style="text-align:center">
+	    	
+	    	<h:commandButton  styleClass="#{languageBean.cssClass('en')}" 	 image="/resources/images/icons/flags/flag_en.png" style="width:36px; height:36px;" >
+	    	<p:ajax event="click" listener="#{languageBean.changeCountryLocaleCodeEn}"/>
+	    	</h:commandButton>
+	    		<h:commandButton  styleClass="#{languageBean.cssClass('es')}" 	 image="/resources/images/icons/flags/flag_es.png" style="width:36px; height:36px;" >
+	    	<p:ajax event="click" listener="#{languageBean.changeCountryLocaleCodeEs}"/>
+	    	</h:commandButton>
+	    		<h:commandButton  styleClass="#{languageBean.cssClass('de')}" 	 image="/resources/images/icons/flags/flag_de.png" style="width:36px; height:36px;" >
+	    	<p:ajax event="click" listener="#{languageBean.changeCountryLocaleCodeDe}"/>
+	    	</h:commandButton>
+	    		<h:commandButton  styleClass="#{languageBean.cssClass('zh')}" 	 image="/resources/images/icons/flags/flag_zh.png" style="width:36px; height:36px;" >
+	    	<p:ajax event="click" listener="#{languageBean.changeCountryLocaleCodeZh}"/>
+	    	</h:commandButton>
+	    		<h:commandButton  styleClass="#{languageBean.cssClass('it')}" 	 image="/resources/images/icons/flags/flag_it.png" style="width:36px; height:36px;" >
+	    	<p:ajax event="click" listener="#{languageBean.changeCountryLocaleCodeIt}"/>
+	    	</h:commandButton>
+	    		<h:commandButton  styleClass="#{languageBean.cssClass('fr')}" 	 image="/resources/images/icons/flags/flag_fr.png" style="width:36px; height:36px;" >
+	    	<p:ajax event="click" listener="#{languageBean.changeCountryLocaleCodeFr}"/>
+	    	</h:commandButton>
+		
+			</h:form>
+			</p:outputPanel>
+									</p:tab>
+						</p:accordionPanel>
+
+</p:outputPanel>
+				</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			</f:view>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

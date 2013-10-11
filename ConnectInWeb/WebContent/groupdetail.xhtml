@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <h:body>
+    
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    	<ui:define name="breadcrumb">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+    		  <p:breadCrumb  >  
+   <p:menuitem  url="home.faces" >
+        <a href="home.faces" ><i class="icon-home" style="font-size:30px; text-decoration:none;"/></a>
+        </p:menuitem>
+   
+        <p:menuitem value="#{msg.groups}" url="groups.faces" />
+        <p:menuitem value="#{groupDetailBean.group.nombre}" url="groupdetail.faces?groupId=#{groupDetailBean.group.id}" />
+</p:breadCrumb>  
+    	</f:view>
+    	
+    	</ui:define>
+    		<ui:define name="content">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+    	 	
+    		  
+    		  <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>  
+              
+<p:dialog width="300" id="status"  position="center" height="30" modal="true" widgetVar="statusDialog" header="Procesando petición"   
+        draggable="false" closable="false" resizable="false">  
+    <p:graphicImage width="250" value="/resources/images/ajaxloadingbar.gif" />  
+</p:dialog> 
+ <p:growl id="growl" autoUpdate="true" showDetail="true"/>
+    
+<h1> #{groupDetailBean.group.nombre}</h1>
+ 
+<blockquote>
+#{groupDetailBean.group.descripcion}
+</blockquote>
+
+
+ <h:form id="formTablaDiscusiones">
+ 
+      <p:dataTable  styleClass="borderTable"  sortOrder="descending" paginatorPosition="bottom" paginatorAlwaysVisible="false" paginator="true"  rows="10" id="tabla-discusiones" var="discusion" value="#{groupDetailBean.discusiones}"  >  
+     <p:column >
+    <div id="discussion-list-autor-fecha">#{discusion.autor.login} #{discusion.fechaS(languageBean.localeCode)}</div>
+    <div id="discussion-list-titulo">  <a title="#{msg.participants}: #{discusion.usuariosParticipantes}" href="discussiondetail.faces?discussionId=#{discusion.id}" >#{discusion.tituloDiscusion}</a>     </div>
+    
+    <div class="clear"></div>
+      
+   
+      
+        </p:column>  
+         
+        
+  
+        
+         
+    </p:dataTable>
+    
+      </h:form>   
+      
+    <h:form id="formNuevaDiscusion" rendered="#{groupDetailBean.member}">
+    <h:panelGrid columns="1" styleClass="inputs-panel-grid">
+      <p:outputLabel value="#{msg.title}"/>
+      <p:inputText styleClass="inputs" value="#{groupDetailBean.nuevaDiscusionTitulo}"/>
+      <p:outputLabel value="#{msg.text}"></p:outputLabel>
+      <p:inputTextarea styleClass="inputs" value="#{groupDetailBean.nuevaDiscusionTexto}"/>
+      <p:commandButton  styleClass="inputs" ajax="false" update=":formTablaDiscusiones:tabla-discusiones, :formNuevaDiscusion" value="#{msg.new_discussion}" actionListener="#{groupDetailBean.nuevaDiscusion()}"/>
+      </h:panelGrid>
+      </h:form>
+        		</f:view>
+        	</ui:define>
+    	</ui:composition>
+    </h:body>
+</html>

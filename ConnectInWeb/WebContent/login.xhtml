@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+       
+    <h:body  >
+    
+    	<ui:composition template="/template/common/registroLayout.xhtml">
+    		<ui:define name="content">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		
+    		  <f:view locale="#{languageBean.localeCode}">
+    		 <p:messages  id="msg"  showDetail="true" autoUpdate="true"  />
+    <!-- 		 
+    		<p:dialog styleClass="noborder" position="10,130" visible="true" id="basicDialog" header="#{msg.demo_users}" widgetVar="dlg1">  
+    <ul>
+    <li><h:outputText value="johndoe:000000" /></li>
+    <li><h:outputText value="janedoe:000000" /></li>
+     <li><h:outputText value="jakedoe:000000" /></li>
+      <li><h:outputText value="jeffdoe:000000" /> </li>
+</ul>
+    		  
+</p:dialog>  -->
+    		 
+    		
+    		<div id="logincontainer" class="ui-shadow">
+    		
+
+	<form action="ServletLogin" method="get">
+	  
+	  <h1 class="ui-widget ui-widget-header">#{msg.login}</h1>
+	<label class="block" for="usuario"  >#{msg.login}  </label>
+	<input  type="text" id="usuario" name="usuario" size="30" />  
+	
+	
+	<label class="block" for="password"  >#{msg.password}:  </label>
+	<input type="password" id="password" name="password"  size="30"/>
+	
+	
+	<input class="block" type="submit"  value="#{msg.login}"/>
+	
+	</form>
+<h:form>
+	<a href="register.faces" >#{msg.link_message_register}</a> #{msg.in_the_largest_social_network_in_the_world}
+</h:form>
+	
+    	
+        	</div>
+        	
+        	
+        	
+        	
+        	</f:view>
+        	</ui:define>
+    	</ui:composition>
+    </h:body>
+</html>

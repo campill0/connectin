@@ -1,0 +1,61 @@
+
+
+abre una consola
+set CLASSPATH=
+rmiregistry
+
+abre otra consola
+java -Djava.security.policy=politicas.txt -Djava.rmi.server.codebase=file:///d:\rmi3/ mirmi.Servidor
+
+abre otra consola
+java -Djava.security.policy=politicas.txt Cliente
+
+
+// para crear el stub
+rmic informeImpl
+
+// ejecutar servidor
+java -cp .;mysql-connector-java-5.1.21.jar –Djava.security.policy=politicas.txt –Djava.rmi.server.codebase=file:///d:\rmi3/ mirmi.Servidor
+
+//esto es para que pueda utilizar la libreria mysql para hacer consultas jdbc esta incluido en la linea de arriba
+-cp .;mysql-connector-java-5.1.21.jar
+
+// ejecutar cliente
+java –Djava.security.policy=politicas.txt mirmi.Cliente
+
+
+set PATH=%PATH%;E:\Program Files\Java\jdk1.7.0_17\bin
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// para crear el stub
+rmic informeImpl
+set PATH=%PATH%;E:\Program Files\Java\jdk1.7.0_17\bin
+
+ 
+esto en una consola 
+set CLASSPATH=
+rmiregistry
+
+// ejecutar servidor en otra consola
+java -cp .;mysql-connector-java-5.1.21.jar –Djava.security.policy=politicas.txt –Djava.rmi.server.codebase=file:///d:\rmi2/ Servidor
+
+//esto es para que pueda utilizar la libreria mysql para hacer consultas jdbc esta incluido en la linea de arriba
+cp .;mysql-connector-java-5.1.21.jar
+
+en otra consola ejecutamos
+// ejecutar cliente
+java –Djava.security.policy=politicas.txt Cliente
+

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+		<persistence-unit name="connectintest1" transaction-type="RESOURCE_LOCAL">
+		<description>Persistencia mediante JPA</description>
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<non-jta-data-source>java:/DataSourceDAD</non-jta-data-source>
+		<class>beans.Categoria</class>
+		<class>beans.Discusion</class>
+		<class>beans.EstadoMensaje</class>
+		
+	
+		<class>beans.Grupo</class>
+		<class>beans.Mensaje</class>
+		<class>beans.Filtro</class>
+		<class>beans.Notificacion</class>
+		<class>beans.Peticion</class>
+		<class>beans.Post</class>
+		<class>beans.Usuario</class>
+		
+		<properties>
+			   <property name="eclipselink.ddl-generation" value="create-tables" />  
+			<property name="eclipselink.ddl-generation.output-mode" value="database" />
+			<property name="eclipselink.target-server" value="JBoss"/>
+			<property name="eclipselink.logging.level" value="CONFIG"/> <!-- info por defecto -->
+		</properties>
+	</persistence-unit>
+</persistence>

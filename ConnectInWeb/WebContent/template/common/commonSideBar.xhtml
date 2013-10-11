@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      >
+    <body>
+	    <ui:composition>
+	<p:outputPanel autoUpdate="true">
+	    <!--  
+		    	<div class="barraIzquierdaInside" style=" text-align: center; ">
+		    <i class="icon-user icon-4x " id="user-foto" ></i>     				
+				
+		    	</div>
+		    	
+		    	
+		    		<div class="barraIzquierdaInside" style=" text-align: center; ">
+		         				
+					#{msg.user_name}
+		    	</div>
+		    	
+		    	-->
+		    	<div class="barraIzquierdaInside" style=" text-align: center; ">
+		    <h:graphicImage id="fotoperfil" styleClass="alinearCentro imagenOpciones fotoperfil" value="ServletImagen?id=#{loggedUserBean.user.id}" />
+		    	</div>
+		    		<div id="user-name" class="barraIzquierdaInside" style=" text-align: center; ">
+		    #{loggedUserBean.user.login}     				
+					
+		    	</div>
+		    	<div style="text-align: center;">
+		    	<h:form>
+		    		<a href="ServletLogout">
+		    			
+		    			#{msg.logout}
+				    	<!-- <h:graphicImage class="alinearCentro" value="/resources/images/icons/logout.png" width="32" height="32"/> -->
+		    		</a>
+	    		</h:form>
+		    	</div>
+		    	<div class="barraIzquierdaInside">
+		    	<h:form>
+		
+		    	 <p:menu styleClass="side-bar-menu" style="border: none;">  
+        <p:submenu label="#{msg.menu}">  
+            <p:menuitem >
+              <a href="home.faces"><i class="icon-home" style="font-size:20px; text-decoration:none;"/> #{msg.home}</a>
+            </p:menuitem>  
+			
+			<p:menuitem >
+              <a href="groups.faces"><i class="icon-group" style="font-size:20px; text-decoration:none;"/> #{msg.groups}</a>
+            </p:menuitem>  
+            
+			<p:menuitem >
+              <a href="messages.faces"><i class="icon-envelope" style="font-size:20px; text-decoration:none;"/> #{msg.messages} (#{loggedUserBean.numeroMensajesSinLeer})</a>
+            </p:menuitem>  
+            
+			<p:menuitem >
+              <a href="myaccount.faces"><i class="icon-user" style="font-size:20px; text-decoration:none;"/> #{msg.my_account}</a>
+            </p:menuitem>  
+            
+			<p:menuitem >
+              <a href="auxiliary.faces"><i class="icon-cogs" style="font-size:20px; text-decoration:none;"/> #{msg.auxiliary}</a>
+            </p:menuitem>  
+            	<p:menuitem >
+              <a href="ejb2cmp2.faces" style="color:red;"><i class="icon-cloud" style="font-size:20px; text-decoration:none;"/> #{msg.ejb_cmp2}</a>
+            </p:menuitem>  
+            
+        
+        </p:submenu>  
+    </p:menu> 
+    
+    </h:form>
+		    	
+		    	
+		    	</div>
+		    
+		</p:outputPanel>		
+	    </ui:composition>
+    </body>
+</html>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <h:body>
+    
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    	<ui:define name="breadcrumb">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+    		  <p:breadCrumb   styleClass="breadcrumb">  
+       <p:menuitem   url="home.faces" >
+        <a href="home.faces" ><i class="icon-home" style="font-size:30px; text-decoration:none;"/></a>
+        </p:menuitem>  
+  
+    
+    <p:menuitem value="#{msg.auxiliary}" url="auxiliary.faces" />  
+      
+</p:breadCrumb>  
+    	</f:view>
+    	
+    	</ui:define>
+    		<ui:define name="content">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+    	 	  
+    		  
+    		  <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>  
+              
+<p:dialog width="300" id="status"  position="center" height="30" modal="true" widgetVar="statusDialog" header="#{msg.processing_request}"   
+        draggable="false" closable="false" resizable="false">  
+    <p:graphicImage width="250" value="/resources/images/ajaxloadingbar.gif" />  
+</p:dialog> 
+ <p:growl id="growl" autoUpdate="true" showDetail="true"/>
+    		
+
+    		  
+
+              
+
+     <h:form  id="categorias-new-form">
+    
+      <h:panelGrid columns="3" style="margin: auto;" >
+     <p:outputLabel for="newnombre" value="#{msg.name}"/>
+     <p:inputText id="newnombre" value="#{auxiliaryBean.newCategoria}"/>
+     <p:commandButton value="#{msg.new_category}"  update=":treeForm,:treeForm:tree" oncomplete="statusDialog.hide();" actionListener="#{auxiliaryBean.addCategoria}"/>
+     </h:panelGrid>
+     
+     </h:form> 
+    	<h:form id="treeForm" >
+    		   	
+  
+    <p:tree id="tree" value="#{auxiliaryBean.root}" var="node"  
+            selectionMode="single"
+              
+            selection="#{auxiliaryBean.selectedNode}"  
+            onNodeClick="widgetModificarCategoria.show()"
+            dynamic="true">  
+    <p:ajax event="select" update=":growl,:editCategoriaForm" listener="#{auxiliaryBean.onNodeSelect}" />  
+        <p:treeNode>  
+            <h:outputText value="#{node}" />  
+               
+        </p:treeNode>  
+        
+        
+    </p:tree>  
+    
+    
+
+    
+     </h:form> 
+      <p:dialog header="#{msg.modify}" widgetVar="widgetModificarCategoria">
+     <h:form id="editCategoriaForm">
+     
+    <p:outputPanel autoUpdate="true">
+     <h:panelGrid columns="2"  style="width:100%;">
+     <p:outputLabel for="nombre" value="Nombre"/>
+     <p:inputText style="width:100%;" id="nombre" value="#{auxiliaryBean.selectedCategoriaNombre}"/>
+        <p:outputLabel value="#{msg.parent}"/>
+         <p:outputLabel value="#{auxiliaryBean.selectedCategoria.padre.nombre}"/>
+          <h:outputText value="#{msg.without_parent}: " />  
+        <p:selectBooleanCheckbox value="#{auxiliaryBean.raiz}"   >
+       <p:ajax update="padre" /> 
+        </p:selectBooleanCheckbox>  
+    
+      
+   
+     
+     
+     </h:panelGrid>
+     <h:panelGrid >
+
+             <p:tree rendered="#{!auxiliaryBean.raiz}" id="padre" value="#{auxiliaryBean.rootPadre}" var="node"  
+            selectionMode="single"  
+            selection="#{auxiliaryBean.selectedNodePadre}"  
+            
+            dynamic="true">  
+    <p:ajax event="select" update=":growl,:editCategoriaForm" listener="#{auxiliaryBean.onNodeSelectRoot}" />  
+        <p:treeNode>  
+            <h:outputText value="#{node}" />  
+               
+        </p:treeNode>  
+        
+        
+    </p:tree>
+   
+  
+    <p:commandButton style="width:100%;" value="#{msg.save}" ajax="false"  update=":treeForm" oncomplete="widgetModificarCategoria.hide();  " actionListener="#{auxiliaryBean.saveCategoria}"/>
+    </h:panelGrid>
+    </p:outputPanel>
+     </h:form>
+       </p:dialog>
+  
+
+          
+        	
+         
+         	
+        		</f:view>
+        	</ui:define>
+    	</ui:composition>
+    </h:body>
+</html>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <h:body>
+    
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    	<ui:define name="breadcrumb">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+    		  <p:breadCrumb  >  
+        <p:menuitem  url="home.faces" >
+        <a href="home.faces" ><i class="icon-home" style="font-size:30px; text-decoration:none;"/></a>
+        </p:menuitem>  
+  
+        <p:menuitem value="#{msg.groups}" url="groups.faces" />
+</p:breadCrumb>  
+    	</f:view>
+    	
+    	</ui:define>
+    		<ui:define name="content">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+    	 	  
+    		  
+    		  <p:ajaxStatus oncomplete="statusDialog.hide();" onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>  
+              
+<p:dialog width="300" id="status"  position="center" height="30" modal="true" widgetVar="statusDialog" header="#{msg.processing_request}"   
+        draggable="false" closable="false" resizable="false">  
+    <p:graphicImage width="250" value="/resources/images/ajaxloadingbar.gif" />  
+</p:dialog> 
+ <p:growl id="growl" autoUpdate="true" showDetail="true"/>
+    
+  
+
+    <h:form id="formTablaGrupos">
+      <p:dataTable emptyMessage="#{msg.no_results}"     sortOrder="descending" paginatorPosition="bottom" paginatorAlwaysVisible="false" paginator="true"  rows="10" id="tabla-grupos" var="grupo" value="#{gruposBean.grupos}" filteredValue="#{gruposBean.gruposFiltered}" styleClass="notificaciones-table borderTable"   >  
+     <p:column filterBy="#{grupo.nombre}" filterMatchMode="contains"  headerText="#{msg.name}">
+       
+     <h:outputText value="*" rendered="#{gruposBean.admin(grupo)}"/> <a title="#{grupo.administrador.login}" href="groupdetail.faces?groupId=#{grupo.id}" >#{grupo.nombre}</a>
+    
+        
+        </p:column>  
+         <p:column filterBy="#{grupo.descripcion}" filterMatchMode="contains" headerText="#{msg.description}">
+        
+        <h:outputText value="#{grupo.descripcion}"/>
+        
+        </p:column> 
+             <p:column filterBy="#{grupo.categoria.nombre}" filterMatchMode="contains" headerText="#{msg.category}">
+        
+        <h:outputText value="#{grupo.categoria.nombre}"/>
+        
+        </p:column> 
+        <p:column >
+        <p:outputPanel autoUpdate="true">
+        <h:outputText value="#{msg.pending_request}" rendered="#{ grupo.solicitudEnviadaPendiente(gruposBean.user) }"/>
+       <p:commandButton update=":formTablaGrupos" rendered="#{gruposBean.renderJoinButton(grupo)}" actionListener="#{gruposBean.join(grupo)}" value="#{msg.join_request}" />
+       <p:commandButton update=":formTablaGrupos" rendered="#{ grupo.removable(gruposBean.user) }" actionListener="#{gruposBean.unjoin(grupo)}" value="#{msg.leave}" />
+        </p:outputPanel>
+        </p:column> 
+        
+    </p:dataTable>
+    
+      </h:form>   
+      
+       <blockquote class="mensaje">* #{msg.you_are_the_ower_of_this_group}</blockquote>   
+ <h:form id="formNuevoGrupo">
+    <h:panelGrid columns="1" styleClass="inputs-panel-grid">
+    <p:outputLabel for="nuevoGrupoNombre" value="#{msg.name}:"/>
+    <p:inputText id="nuevoGrupoNombre" styleClass="inputs" value="#{gruposBean.nuevoGrupoNombre}" />
+     <p:outputLabel for="nuevoGrupoDescripcion" value="#{msg.description}:"/>
+ 
+    <p:inputTextarea  id="nuevoGrupoDescripcion" styleClass="inputs" value="#{gruposBean.nuevoGrupoDescripcion}" />
+    
+       <p:outputLabel for="nuevoGrupoCategoria" value="#{msg.category}:"/>
+  
+  	<p:selectOneMenu styleClass="inputs"  valueChangeListener="#{gruposBean.selectCategoriaValueChangeHandler}"   id="nuevoGrupoCategoria"  value="#{gruposBean.nuevoGrupoCategoria}">
+    <f:selectItems   value="#{gruposBean.categorias}" var="categoria" itemLabel="#{categoria}" itemValue="#{categoria.id}"/>
+     
+    </p:selectOneMenu>
+    
+    <p:commandButton styleClass="inputs" update=":formTablaGrupos:tabla-grupos,:formNuevoGrupo" value="#{msg.create_group}" actionListener="#{gruposBean.crearGrupo()}" oncomplete="statusDialog.hide();" />
+   
+    </h:panelGrid>
+    </h:form>
+    
+         	
+        		</f:view>
+        	</ui:define>
+    	</ui:composition>
+    </h:body>
+</html>

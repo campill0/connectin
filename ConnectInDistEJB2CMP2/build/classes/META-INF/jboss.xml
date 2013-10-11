@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE jboss PUBLIC "-//JBoss//DTD JBOSS 3.2//EN"
+"http://www.jboss.org/j2ee/dtd/jboss_3_2.dtd">
+<jboss>
+	<enterprise-beans>
+		<entity>
+			<ejb-name>CategoriaCMP2</ejb-name>
+			<jndi-name>CategoriaCMP2</jndi-name>
+			<local-jndi-name>local/CategoriaCMP2</local-jndi-name>
+		</entity>
+		<entity>
+			<ejb-name>GrupoCMP2</ejb-name>
+			<jndi-name>GrupoCMP2</jndi-name>
+			<local-jndi-name>local/GrupoCMP2</local-jndi-name>
+		</entity>
+	</enterprise-beans>
+</jboss>

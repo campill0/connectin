@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <h:body>
+    
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    	<ui:define name="breadcrumb">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+    		  <p:breadCrumb  >  
+  <p:menuitem  url="home.faces" >
+        <a href="home.faces" ><i class="icon-home" style="font-size:30px; text-decoration:none;"/></a>
+        </p:menuitem>
+  
+      
+</p:breadCrumb>  
+    	</f:view>
+    	
+    	</ui:define>
+    		<ui:define name="content">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+    
+    		  <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>  
+              
+<p:dialog width="300" id="status"  position="center" height="30" modal="true" widgetVar="statusDialog" header="#{msg.processing_request}"   
+        draggable="false" closable="false" resizable="false">  
+    <p:graphicImage width="250" value="/resources/images/ajaxloadingbar.gif" />  
+</p:dialog> 
+ <p:growl id="growl" autoUpdate="true" showDetail="true" widgetVar="widgetGrowl"/>
+    	   	  
+    		   	<h:form id="form">
+  <p:panelGrid styleClass="borderTable" style="margin: auto; width: 100%; margin-top:20px;"  >  
+ 
+      <p:row>
+      <p:column> <h:outputText value="#{msg.users}: " /></p:column>
+      <p:column >
+       <p:autoComplete 
+   
+   forceSelection="true"
+   
+   var="contacto"
+   itemLabel="#{contacto.login}"
+   itemValue="#{contacto}" 
+   converter="usuarioConverter"
+   id="queryContactos"
+   value="#{contactosBean.usuarioSeleccionado}"
+   completeMethod="#{contactosBean.searchCompleteUsuarios}"
+ 
+   styleClass="autocomplete-width-100x100"
+   maxResults="100"
+   minQueryLength="3"
+   >
+   <p:ajax event="itemSelect" update="foto-usuario,form, boton-peticion-amistad" listener="#{contactosBean.seleccionarUsuarioHandler}"  />  
+   </p:autoComplete>
+     </p:column>
+      <p:column>
+       <p:commandButton  oncomplete="$(widgetBotonPeticion.jqId).css('display','none');" widgetVar="widgetBotonPeticion" id="boton-peticion-amistad" style="width:100%;" value="#{msg.to_request_friendship}" rendered="#{!contactosBean.botonPeticionAmistadDisabled}"  actionListener="#{contactosBean.solicitarAmistadHandler}" update="foto-usuario, boton-peticion-amistad, form"/>
+ 
+      </p:column>
+      <p:column >
+     
+      <h:panelGrid rendered="#{contactosBean.mostrarUsuarioSeleccionado}" columns="1" styleClass="selected-user" >
+       <p:graphicImage   id="foto-usuario" value="ServletImagen?id=#{contactosBean.usuarioSeleccionado.id}" width="96" height="96"/>
+          <h:outputText  value="#{contactosBean.usuarioSeleccionado.nombre} #{contactosBean.usuarioSeleccionado.apellidos} (#{contactosBean.usuarioSeleccionado.login})"/>
+          </h:panelGrid>
+      </p:column>
+      </p:row>
+    
+    <p:row>
+      <p:column><h:outputText value="#{msg.contacts}: " /> </p:column>
+      <p:column> 
+      
+      
+       <p:selectOneMenu 
+       valueChangeListener="#{contactosBean.contactosSelectValueChange}"
+       update="foto-contacto, form" 
+       
+       styleClass="inputs"
+       converter="usuarioConverter" 
+       id="contactos" 
+       value="#{contactosBean.contactoSeleccionado}" 
+       var="c"   
+       filter="true" 
+       filterMatchMode="startsWith"
+       >  
+         <p:ajax  update="foto-usuario,form" listener="#{contactosBean.seleccionarContactoHandler}"  />       
+                <f:selectItems  value="#{contactosBean.contactos}"  itemLabel="#{contacto.login}" itemValue="#{contacto}" var="contacto" />
+                 <p:column>  
+                <p:graphicImage value="ServletImagen?id=#{c.id}" width="96" height="96"/>
+                
+            </p:column>  
+  
+            <p:column>  
+                #{c.nombre} (#{c.login})    
+            </p:column> 
+          
+               
+            </p:selectOneMenu> 
+            
+            
+            
+              </p:column>
+      <p:column> <p:commandButton style="width:100%;" value="#{msg.delete}"  actionListener="#{contactosBean.eliminarContactoHandler}" update="foto-contacto,form"></p:commandButton></p:column>
+          <p:column >
+   <h:panelGrid rendered="#{contactosBean.mostrarContactoSeleccionado}" columns="1" styleClass="selected-user" >
+     
+         <p:graphicImage   id="foto-contacto"  value="ServletImagen?id=#{contactosBean.contactoSeleccionado.id}" width="96" height="96"/>
+         <h:outputText  value="#{contactosBean.contactoSeleccionado.nombre} #{contactosBean.contactoSeleccionado.apellidos} (#{contactosBean.contactoSeleccionado.login})"/>
+    </h:panelGrid>     
+        
+      </p:column>
+      </p:row>
+</p:panelGrid>   
+  
+  
+       
+  
+  <h:panelGrid columns="3" style="margin:auto;">
+  <p:column>
+      #{msg.contacts}: <p:selectBooleanCheckbox value="#{dashboardBean.filtroAmistad}" >  
+            <p:ajax  update="tabla-novedades , foto-contacto , foto-usuario" listener="#{dashboardBean.fake()}"/>   
+        </p:selectBooleanCheckbox>  
+  </p:column>
+  <p:column>
+     #{msg.groups}:<p:selectBooleanCheckbox value="#{dashboardBean.filtroGrupo}" >  
+           <p:ajax  update="tabla-novedades" listener="#{dashboardBean.fake()}"/> 
+        </p:selectBooleanCheckbox>     
+  </p:column>
+  <p:column>
+    #{msg.messages}:<p:selectBooleanCheckbox value="#{dashboardBean.filtroMensaje}" >  
+          <p:ajax  update="tabla-novedades" listener="#{dashboardBean.fake()}"/> 
+        </p:selectBooleanCheckbox>  
+      
+  </p:column>
+   </h:panelGrid>
+  
+  
+  
+
+
+     
+   
+    
+  <!-- sortBy="#{notificacion.fecha}" sortOrder="descending" -->
+       
+      
+      <p:dataTable emptyMessage="#{msg.no_results}"   paginatorPosition="bottom" paginatorAlwaysVisible="false" paginator="true"  rows="10" id="tabla-novedades" var="notificacion" filteredValue="#{dashboardBean.notificaciones}" styleClass="notificaciones-table borderTable"   >  
+        <p:column sortBy="#{notificacion.tipo}" style="text-align: center; width:20px;" styleClass="ui-widget-header" headerText="#{msg.type}">
+        
+        <i  class="#{dashboardBean.cssClass(notificacion)}"></i> 
+        
+        </p:column>  
+          <p:column  sortBy="#{notificacion.fecha}"  style="text-align: center; min-width:100px;" headerText="#{msg.date}">  
+            <h:outputText value="#{notificacion.fechaS(languageBean.localeCode)}" />  
+        </p:column>  
+           <p:column sortBy="#{notificacion.descripcion}" headerText="#{msg.description}">  
+                 
+            <h:outputText value="#{dashboardBean.descripcionAmpliada(notificacion)}" />  
+        </p:column>  
+        
+            <p:column id="acciones" headerText="#{msg.contacts}" style="text-align:center;" >  
+                	
+	
+
+               <p:commandButton  update ="tabla-novedades"    actionListener="#{dashboardBean.aceptarPeticion(notificacion)}"  rendered="#{dashboardBean.rendered(notificacion,'aceptar')}" value="#{msg.accept}" />
+               <p:commandButton  update ="tabla-novedades"  actionListener="#{dashboardBean.rechazarPeticion(notificacion)}" rendered="#{dashboardBean.rendered(notificacion,'rechazar')}" value="#{msg.reject}"   />
+               <p:commandButton update ="tabla-novedades, :form:modalDialog" rendered="#{dashboardBean.rendered(notificacion,'leer')}" value="#{msg.read}"  oncomplete="messages.show()">
+                 <f:setPropertyActionListener value="#{notificacion}" target="#{dashboardBean.selectedNotificacion}" />  
+               </p:commandButton>  
+          
+
+        </p:column> 
+    </p:dataTable>  
+  
+<p:dialog styleClass="noborder" id="modalDialog" width="600"  height="400" header="#{dashboardBean.selectedNotificacion.mensaje.asunto} #{msg.send_by} #{dashboardBean.selectedNotificacion.mensaje.emisor.login}" widgetVar="messages" modal="true"  >  
+		   
+		  <span class="mensaje-texto"><h:outputText escape="false" value="#{dashboardBean.selectedNotificacion.mensaje.texto}" />  </span>
+		   
+		  
+</p:dialog>   
+
+
+         
+
+
+
+         
+ 
+         </h:form>  	
+         
+         	
+        		</f:view>
+        	</ui:define>
+    	</ui:composition>
+    </h:body>
+</html>

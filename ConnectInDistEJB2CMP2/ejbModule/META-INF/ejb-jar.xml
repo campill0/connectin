@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ejb-jar id="ejb-jar_ID" version="2.1" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd">
+	<display-name>ConnectInDistEJB2CMP2</display-name>
+<enterprise-beans>
+<entity>
+			<ejb-name>CategoriaCMP2</ejb-name>
+			<home>interfaces.CategoriaHome</home>
+			<remote>interfaces.CategoriaRemote</remote>
+			<local-home>interfaces.CategoriaLocalHome</local-home>
+			<local>interfaces.CategoriaLocal</local>
+			<ejb-class>ejb.CategoriaCMP2</ejb-class>
+			<persistence-type>Container</persistence-type>
+			<prim-key-class>java.lang.String</prim-key-class>
+			<reentrant>true</reentrant>
+			<cmp-version>2.x</cmp-version>
+			<abstract-schema-name>Categoria</abstract-schema-name>
+			
+			<cmp-field>
+				<field-name>nombre</field-name>
+			</cmp-field>
+			<primkey-field>nombre</primkey-field>
+			<query>
+				<query-method>
+					<method-name>findAll</method-name>
+					<method-params />
+				</query-method>
+				<ejb-ql> SELECT OBJECT(c) FROM Categoria c </ejb-ql>
+			</query>
+		</entity>
+	
+    	<entity>
+			<ejb-name>GrupoCMP2</ejb-name>
+			<home>interfaces.GrupoHome</home>
+			<remote>interfaces.GrupoRemote</remote>
+			<local-home>interfaces.GrupoLocalHome</local-home>
+			<local>interfaces.GrupoLocal</local>
+			<ejb-class>ejb.GrupoCMP2</ejb-class>
+			<persistence-type>Container</persistence-type>
+			<prim-key-class>java.lang.String</prim-key-class>
+			<reentrant>true</reentrant>
+			<cmp-version>2.x</cmp-version>
+			<abstract-schema-name>Grupo</abstract-schema-name>
+			<cmp-field>
+				<field-name>nombre</field-name>
+			</cmp-field>
+			<cmp-field>
+				<field-name>descripcion</field-name>
+			</cmp-field>
+			<cmp-field>
+				<field-name>categoria</field-name>
+			</cmp-field>
+			<cmp-field>
+				<field-name>administrador</field-name>
+			</cmp-field>
+			<primkey-field>nombre</primkey-field>
+			<query>
+				<query-method>
+					<method-name>findAll</method-name>
+					<method-params />
+				</query-method>
+				<ejb-ql> SELECT OBJECT(c) FROM Grupo c </ejb-ql>
+			</query>
+		</entity> 
+    
+</enterprise-beans>
+
+</ejb-jar>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <h:body>
+     
+    	<ui:composition template="/template/common/registroLayout.xhtml">
+    	<ui:define name="breadcrumb">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+    		  <p:breadCrumb  >  
+        <p:menuitem  url="home.faces" >
+        <a href="login.faces" ><i class="icon-key" style="font-size:30px; text-decoration:none;"/></a>
+        </p:menuitem>  
+  
+        <p:menuitem value="#{msg.register}" url="register.faces" />
+</p:breadCrumb>  
+    	</f:view>
+    	
+    	</ui:define>
+    		<ui:define name="content">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		
+    		  <f:view locale="#{languageBean.localeCode}">
+    			
+    			<p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>  
+              
+<p:dialog width="300" id="status"  position="center" height="30" modal="true" widgetVar="statusDialog" header="Procesando petición"   
+        draggable="false" closable="false" resizable="false">  
+    <p:graphicImage width="250" value="/resources/images/ajaxloadingbar.gif" />  
+</p:dialog> 
+
+    			<div id="registro">
+        		
+        		<h:panelGrid styleClass="signup-panel-grid" style="width:100%;" columns="2">
+
+        				<h:form id="form-signup">  
+	  <h1 class="ui-widget ui-widget-header">#{msg.personal_data}</h1>
+	<!--     <p:panel id="panelPersonal" header="#{msg.personal_data}"> -->  
+    <p:messages id="msgs" escape="false"/>
+    <p:growl id="growl" autoUpdate="true" showDetail="true"/>
+        <h:panelGrid columns="2">  
+             
+            <h:outputLabel styleClass="capitalize" for="login" value="#{msg.login}:" />  
+            <p:inputText id="login" value="#{registroUsuarioBean.login}" required="true" label="#{msg.login}:" validatorMessage="#{msg.login}:#{registroUsuarioBean.login}#{msg.error_login_field}">  
+            <f:validateLength minimum="3" maximum="128" />
+            <f:validateRegex pattern="[a-z][a-z0-9_-]{3,15}"  />
+            </p:inputText>
+            
+            <h:outputLabel styleClass="capitalize" for="name" value="#{msg.name}:" />  
+            <p:inputText id="name" value="#{registroUsuarioBean.nombre}" required="true" label="#{msg.name}:" validatorMessage="#{msg.name}:#{registroUsuarioBean.nombre}#{msg.error_name_field}">  
+            <f:validateLength minimum="2" maximum="128" />
+            <f:validateRegex pattern="([A-ZÁÉÍÓÚÑ][a-záéíóúñ]{1,})([\s][A-ZÁÉÍÓÚÑ][a-záéíóúñ]{1,})*"  />
+            </p:inputText>  
+            <h:outputLabel for="apellido" value="#{msg.lastname}:" />  
+            <p:inputText id="apellido" value="#{registroUsuarioBean.apellidos}" required="true" label="apellido" validatorMessage="#{msg.lastname}:#{registroUsuarioBean.apellidos} #{msg.error_surname_field}" >  
+            <f:validateLength minimum="2" maximum="182" />
+            <f:validateRegex pattern="([A-ZÁÉÍÓÚÑ][a-záéíóúñ]{1,})([\s][A-ZÁÉÍÓÚÑ][a-záéíóúñ]{1,})*"/>
+            </p:inputText>
+            <h:outputLabel for="mail" value="#{msg.email}:" />  
+            <p:inputText id="mail" value="#{registroUsuarioBean.mail}" required="true" label="mail" >  
+            <f:validator validatorId="emailExistValidator"/>
+            </p:inputText>  
+            <h:outputLabel for="password1" value="#{msg.password}:" />  
+            <p:password  id="password1" match="password2" value="#{registroUsuarioBean.password}" required="true" label="clave" feedback="true" 
+            promptLabel="#{msg.type_the_password}" weakLabel="#{msg.weak}"  goodLabel="#{msg.good}" strongLabel="#{msg.best}"
+            >  
+            <f:validateLength minimum="6"/>
+            </p:password>
+
+            <h:outputLabel for="password2" value="#{msg.password}:" /> 
+              
+                    
+            <p:password id="password2"  value="#{registroUsuarioBean.password}" required="true" label="repetir clave"   >  
+<f:validateLength minimum="3"/>
+            
+            </p:password>
+            <h:outputLabel for="calendar" value="#{msg.birthday}:" />
+            <p:calendar id="calendar" value="#{registroUsuarioBean.fechaNacimiento}" navigator="true" display="inline"/>              
+
+   
+        </h:panelGrid>  
+  <!-- <p:captcha id="captcha" required="true"   label="Captcha" language="es" theme="clean" /> -->
+  <!--   </p:panel> -->
+    
+  
+
+    
+ 
+    
+
+    
+        <p:commandButton  id="btn" value="#{msg.signup}" update="form-signup" actionListener="#{registroUsuarioBean.registrarUsuario}" >
+      
+       <f:attribute name="imagen" value="#{imageCropperBean}" />
+        
+        </p:commandButton>    
+  
+</h:form> 
+
+
+			
+<h:form id="form-cropper">  
+
+<h1 class="ui-widget ui-widget-header">#{msg.personal_data}</h1> 
+
+<h:panelGrid   styleClass="image-cropper-inner" columns="2">
+<p:imageCropper  widgetVar="widget-image-cropper" immediate="true" id="imagecropper" value="#{imageCropperBean.croppedImage}"              image="/resources/tmp/#{imageCropperBean.uploadedImage}" aspectRatio="#{imageCropperBean.ratio}" initialCoords="0,0,1000,1000"/>
+<p:graphicImage id="localCroppedImage" width="#{imageCropperBean.widthPreview}" height="#{imageCropperBean.heightPreview}" value="/resources/tmp/#{imageCropperBean.newImageName}.#{imageCropperBean.extension}" />
+</h:panelGrid>
+<p:commandButton widgetVar="crop-button-widget" value="Crop" rendered="#{imageCropperBean.rendered}"            action="#{imageCropperBean.crop()}"                update=":form-cropper:localCroppedImage"/>
+</h:form>  
+<div >
+ <h:form enctype="multipart/form-data">
+    <p:fileUpload
+    
+    label="#{msg.upload}"
+        mode="advanced"
+        fileUploadListener="#{imageCropperBean.handleFileUpload}"
+        allowTypes="/(\.|\/)(gif|jpg|jpeg|gif|png|PNG|GIF|JPG|JPEG)$/" 
+        auto="true"
+        showButtons="false"
+        update=":form-cropper:imagecropper,:form-cropper,:form-cropper:localCroppedImage"
+       dragDropSupport="true"
+        />
+</h:form> 	
+</div>
+
+		
+
+</h:panelGrid>
+
+        		</div>	
+        		
+
+		
+		
+		
+		
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+
+        		</f:view>
+        	</ui:define>
+    	</ui:composition>
+    </h:body>
+</html>

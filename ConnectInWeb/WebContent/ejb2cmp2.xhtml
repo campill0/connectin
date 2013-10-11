@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <h:body>
+    
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    	<ui:define name="breadcrumb">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+    		 		  <p:breadCrumb  >  
+        <p:menuitem  url="home.faces" >
+        <a href="home.faces" ><i class="icon-home" style="font-size:30px; text-decoration:none;"/></a>
+        </p:menuitem>  
+  
+        <p:menuitem value="#{msg.ejb_cmp2}" url="ejbcmp2.faces" /> 
+</p:breadCrumb>  
+    	</f:view>
+    	
+    	</ui:define>
+    		<ui:define name="content">
+    		<f:loadBundle basename="resource.MessageResources" var="msg" />
+    		  <f:view locale="#{languageBean.localeCode}">
+   
+    		
+ <p:panel header="#{msg.categories}">
+ <h:form>
+  
+  <p:outputLabel value="#{msg.name}" /> 
+    <p:outputPanel autoUpdate="true">  
+  <p:inputText value="#{ejbCmp2Bean.nuevaCategoriaNombre}"/>
+  </p:outputPanel>
+  <p:commandButton value="#{msg.create}" actionListener="#{ejbCmp2Bean.addCategoria}"/>
+   </h:form>  
+   <p:outputPanel autoUpdate="true">    
+  <p:dataTable value="#{ejbCmp2Bean.categorias}" emptyMessage="#{msg.no_results}"   paginatorPosition="bottom" paginatorAlwaysVisible="false" paginator="true"  rows="10" id="tabla-categorias" var="categoria"  styleClass="notificaciones-table borderTable"   >  
+  <p:column  style="text-align: center; width:20px;"  headerText="#{msg.category}">
+  #{categoria.nombre}
+  </p:column>  
+  </p:dataTable> 
+  </p:outputPanel>
+</p:panel>  
+
+ <p:panel header="#{msg.groups}">
+ <h:form>
+   <p:outputPanel autoUpdate="true">  
+  <p:outputLabel value="#{msg.name}" /> 
+  <p:inputText value="#{ejbCmp2Bean.nuevoGrupoNombre}"/>
+ 
+  <p:outputLabel value="#{msg.description}" /> 
+  <p:inputText value="#{ejbCmp2Bean.nuevoGrupoDescripcion}"/>
+ 
+  <p:outputLabel value="#{msg.administrator}" /> 
+  <p:inputText value="#{ejbCmp2Bean.nuevoGrupoAdministrador}"/>
+ 
+  <p:outputLabel value="#{msg.category}" /> 
+  <p:inputText value="#{ejbCmp2Bean.nuevoGrupoCategoria}"/>
+ </p:outputPanel>
+  <p:commandButton value="#{msg.create}" actionListener="#{ejbCmp2Bean.addGrupo}"/>
+  
+   </h:form>    
+   <p:outputPanel autoUpdate="true">  
+  <p:dataTable value="#{ejbCmp2Bean.grupos}" emptyMessage="#{msg.no_results}"   paginatorPosition="bottom" paginatorAlwaysVisible="false" paginator="true"  rows="10" id="tabla-grupos" var="grupo"  styleClass="notificaciones-table borderTable"   >  
+  <p:column  style="text-align: center; width:20px;"  headerText="#{msg.name}">
+  #{grupo.nombre}
+  </p:column>  
+ <p:column  style="text-align: center; width:20px;"  headerText="#{msg.group}">
+  #{grupo.descripcion}
+ </p:column>  
+ <p:column  style="text-align: center; width:20px;"  headerText="#{msg.administrator}">
+  #{grupo.administrador}
+  </p:column>  
+   <p:column  style="text-align: center; width:20px;"  headerText="#{msg.category}">
+  #{grupo.categoria}
+  </p:column>  
+  </p:dataTable> 
+  </p:outputPanel>
+</p:panel>  	
+        		</f:view>
+        	</ui:define>
+    	</ui:composition>
+    </h:body>
+</html>
