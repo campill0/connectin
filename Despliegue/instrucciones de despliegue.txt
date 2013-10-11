@@ -1,0 +1,55 @@
+Para desplegar la aplicación necesitamos.
+•	Servidor mysql y una base de datos creada llamada “aadd20122013b”.
+•	Un servidor de aplicaciones Jboss 6.
+Movemos el fichero suministrado aadd-ds.xml a la ruta:
+Path_to_jboss\jboss-6.1.0.Final\server\default\deploy\aadd-ds.xml
+Modificamos el fichero standardjbosscmp-jdbc.xml con los siguientes datos.
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jbosscmp-jdbc PUBLIC
+   "-//JBoss//DTD JBOSSCMP-JDBC 4.0//EN"
+   "http://www.jboss.org/j2ee/dtd/jbosscmp-jdbc_4_0.dtd">
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--  Standard JBossCMP-JDBC Configuration                                 -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+
+<!-- $Id: standardjbosscmp-jdbc.xml 77362 2008-08-22 15:09:04Z alex.loubyansky@jboss.com $ -->
+
+<jbosscmp-jdbc>
+
+   <defaults>
+      <datasource>java:/DataSourceDAD</datasource>
+      <!-- optional since 4.0 <datasource-mapping>Hypersonic SQL</datasource-mapping> -->
+ <datasource-mapping>mySQL</datasource-mapping>
+    ...
+   </defaults>
+	...
+  </jbosscmp-jdbc>
+
+Path_to_jboss\jboss-6.1.0.Final\server\default\conf\standardjbosscmp-jdbc.xml
+Colocamos las librerías eclipselink.jar y mysql-connector-java-5.1.21-bin.jar en Path_to_jboss\jboss-6.1.0.Final\server\default\lib
+Movemos la carpeta rmi a un sitio localizable (los siguientes datos corresponderán con C:\rmi)
+Si todavía no existe en la variable de entorno PATH abrimos una consola e introducimos el siguiente comando:
+E:\Archivos de programa\java\jdk1.6.0_31
+set PATH=%PATH%;E:\Program Files\Java\jdk1.6.0_31\bin
+
+
+jdk1.6.xxxxx sea la carpeta donde tenemos el jdk.
+Una vez hecho esto introducimos los siguientes 2 comandos:
+set CLASSPATH=
+rmiregistry
+
+Abrimos otra consola he introducimos los siguientes comandos:
+c:
+cd rmi
+java -Djava.security.policy=politicas.txt -Djava.rmi.server.codebase=file:///c:\rmi/ mirmi.Servidor
+
+Ya tenemos funcionando el proceso servidor que proporciona acceso al objeto distribuido rmi GestorMails.
+Arrancamos el servidor mysql.
+Copiamos los ficheros ConnectInWeb.war, ConnectinDistEJBCMP2.jar y ConnectInDistEJB3.jar en la carpeta de despliege Path_to_jboss\jboss-6.1.0.Final\server\default\deploy\
+Debemos añadir 2 parámetros al servidor  para que funcione la parte de rmi
+En las opciones de launch configurations de jboss:
+ "-Djava.security.policy=d:/rmi3/politicas.txt" "-Djava.rmi.server.codebase=file:///d:\rmi3/"
+Finalmente arrancamos el servidor jboss.
